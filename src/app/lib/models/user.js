@@ -4,8 +4,12 @@ const UserSchema = new mongoose.Schema({
   _id:{
     type:mongoose.Schema.Types.ObjectId,
 <<<<<<< HEAD
+<<<<<<< HEAD
     unique:true,
     default : () => new mongoose.Types.ObjectId().toString()
+=======
+    unique:true
+>>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
 =======
     unique:true
 >>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
@@ -24,9 +28,12 @@ const UserSchema = new mongoose.Schema({
         required:true
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
     avatar_Pid:{
         type:String,
     },
+=======
+>>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
 =======
 >>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
     date:{
@@ -37,8 +44,13 @@ const UserSchema = new mongoose.Schema({
         type:String,
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
     resume_Pid:{
         type:String,
+=======
+    resume:{
+        type:Blob,
+>>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
 =======
     resume:{
         type:Blob,
