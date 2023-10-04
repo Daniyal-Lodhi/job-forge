@@ -39,6 +39,7 @@ const page = async () => {
   const setavatar = async()=>{
     const res = await axios.post('/api/seeker/avatar',{file})
     const data = res.data ;
+    
   }
   
   return (

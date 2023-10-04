@@ -24,13 +24,12 @@ export const POST = async (req) => {
         if(!passCompare){
             return NextResponse.json({  success,error :"Invalid Credentials" }, { status: 400 })
         }
-        // const avatar = user.avatar
         let data = {
             user:{
                 id:user._id
             }
         }
-        console.log(user.avatar_Pid)
+        // console.log(user.avatar_Pid)
         var authToken = jwt.sign(data,process.env.authSecret)
         const cookie = cookies() ;
         const token = cookie.set('authToken',authToken,{
