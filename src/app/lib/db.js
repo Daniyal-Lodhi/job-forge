@@ -6,7 +6,7 @@ const uri = `mongodb+srv://${name}:${pass}@cluster0.eczrsa5.mongodb.net/jobForge
 const connectToMongo = ()=>{ 
     try {
         mongoose.connect(uri)
-        console.log("connected")
+        console.log("connected to Mongo db")
     } catch (error) {
         console.log(error)
     }

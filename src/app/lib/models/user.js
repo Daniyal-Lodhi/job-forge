@@ -1,63 +1,41 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-  _id:{
-    type:mongoose.Schema.Types.ObjectId,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    unique:true,
-    default : () => new mongoose.Types.ObjectId().toString()
-=======
-    unique:true
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
-=======
-    unique:true
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
-  },
-    name:{
-        type:String,
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: true,
+        default: () => new mongoose.Types.ObjectId().toString()
+    },
+    name: {
+        type: String,
         required: true
     },
-    email:{
-        type:String,
-        require:true,
-        unique:true
+    email: {
+        type: String,
+        require: true,
+        unique: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-    avatar_Pid:{
-        type:String,
+
+    avatar_Pid: {
+        type: String,
     },
-=======
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
-=======
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
-    date:{
-        type:Date,
-        default : Date.now()
+    date: {
+        type: Date,
+        default: Date.now()
     },
-    description:{
-        type:String,
+    description: {
+        type: String,
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-    resume_Pid:{
-        type:String,
-=======
-    resume:{
-        type:Blob,
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
-=======
-    resume:{
-        type:Blob,
->>>>>>> ddcbfc825883fcc7f8cedef879d2c7630873c650
+
+    resume_Pid: {
+        type: String,
     }
-},{
-  collection:"Seeker"
+}, {
+    collection: "Seeker"
 })
 
-module.exports = mongoose.models.user || mongoose.model('user',UserSchema) ;
+module.exports = mongoose.models.user || mongoose.model('user', UserSchema);
