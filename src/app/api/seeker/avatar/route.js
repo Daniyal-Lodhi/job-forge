@@ -12,7 +12,7 @@ cloudinary.config({
 export const POST = async(req,res)=>{
     fetchuser(req) ;
     const body = await req.json() ;
-    const {file} = body ;
+    const {avatar} = body ;
     var success ;
     try {
         var user = await User.findById({_id:req.user.id})
@@ -29,14 +29,15 @@ export const POST = async(req,res)=>{
         var opt = {
             public_id: `${user.name}-${Date.now()}`,
             folder: 'jbfAvatar',
-            resource_type:'auto'
+            resource_type:'auto',
+            upload_preset:'jbf_preset'
         }
-        await cloudinary.uploader.upload(file,opt,(error,result)=>{
+        await cloudinary.uploader.upload(avatar,opt,(error,result)=>{
             if (error){
                 console.log(error)
             }
             user.avatar_Pid = result.public_id ;
-            console.log("upload done" ,result)
+            console.log("upload done" ,result.public_id)
         })
         await user.save()
 

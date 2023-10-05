@@ -4,12 +4,13 @@ import connectToMongo from '@/app/lib/db'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server';
 import User from '@/app/lib/models/user';
+import setAvatar from '@/app/backendComponents/avatarSignup';
 
 connectToMongo();
 // Seeker SIGNUP
 export const POST = async (req, res) => { 
     const body = await req.json();
-    const { name, email, password } = body;
+    const { name, email, password , avatar} = body;
     var success;
     // if user login from google then manipulating google sub ID
     var { _id } = body;
@@ -17,19 +18,23 @@ export const POST = async (req, res) => {
         const idLength = _id.toString().length
         // fixing the length of google subId
         if (idLength !== 24) {
-            const randomNumber = Math.random() * 1000000000
+            const randomNumber = Math.random() * 10000000000000
             const randomRoundedNumber = Math.floor(randomNumber);   // Round down to an integer
             _id = _id.toString() + Date.now() + randomRoundedNumber
             _id = _id.substring(0, 24)
         }
     }
     try {
+        
         let user = await User.findOne({ email: email })
         if (user) {
             success = false;
             return NextResponse.json({ message: "Email already registered", success },{status:400})
         }
         else {
+            if (avatar){
+                var avatar_Pid = await setAvatar(avatar,name) ;
+              }
             var salt = await bcrypt.genSaltSync(10);
             const hashedPass = await bcrypt.hash(password, salt)
             const userObj = {
@@ -37,6 +42,7 @@ export const POST = async (req, res) => {
                 name: name,
                 email: email,
                 password: hashedPass,
+                avatar_Pid:avatar_Pid
             }
             user = await User.create(userObj);
             let data = {
@@ -44,6 +50,7 @@ export const POST = async (req, res) => {
                     id: _id
                 }
             }
+            
             var authToken = jwt.sign(data, process.env.authSecret)
             // setting the auto login for a month if user check remember me
             const { rememberMe } = body
@@ -54,7 +61,7 @@ export const POST = async (req, res) => {
                 maxAge: 10800
             })
             success = true;
-            return NextResponse.json({success,message:"user registered"}, { status:200,
+            return NextResponse.json({success,user,message:"user registered"}, { status:200,
                 headers: {
                     "set-cookie": token
                 }

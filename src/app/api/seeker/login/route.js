@@ -14,6 +14,7 @@ export const POST = async (req) => {
     try {
         // Finding the user
         let user = await User.findOne({ email })
+        
         // User not found
         if (!user){
             success = false;
@@ -29,7 +30,6 @@ export const POST = async (req) => {
                 id:user._id
             }
         }
-        // console.log(user.avatar_Pid)
         var authToken = jwt.sign(data,process.env.authSecret)
         const cookie = cookies() ;
         const token = cookie.set('authToken',authToken,{
