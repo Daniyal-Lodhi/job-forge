@@ -1,20 +1,22 @@
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server';
 
-const fetchuser = async(req,res,next)=>{
-    const cookiesStore = cookies() ;
-    try{
-    var authToken = cookiesStore.get('authToken') 
-    if(!authToken){
-        return NextResponse.json("Please use a valid authentication token",{status:400})
+
+const fetchuser = async (req, res, next) => {
+    const cookiesStore = cookies();
+    var authToken = cookiesStore.get('authToken')
+    if (!authToken) {
+        const error = new Error('Please login or authenticate using a valid token')
+        error.statusCode = 401
+        error.name = "Invalid Authentication token "
+        throw error
     }
-    authToken = authToken.value
-        const data = jwt.verify(authToken,process.env.authSecret)
+    else {
+        authToken = authToken.value
+        const data = jwt.verify(authToken, process.env.authSecret)
         req.user = data.user
-    }catch(error){
-        console.log(error)
     }
+
 }
 
-export default fetchuser ;
+export default fetchuser;

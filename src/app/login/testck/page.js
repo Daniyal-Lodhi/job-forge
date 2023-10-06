@@ -29,32 +29,59 @@ const page = async () => {
    }
 
    const tst = async()=>{
+    try{
     const res =await axios.post('/api/test')
     var data = res.data ;
     console.log(data)
+    }catch(err){
+      console.log(err.response.data)
+    }
    }
+  //  get user request
+  var resume_Pid;
+  const getuser = async()=>{
+   axios.get('/api/seeker').
+   then((res)=>{
+    console.log(res.data)
+    resume_Pid = res.data.seeker.resume_Pid
+    var address = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_cloud_name}/${resume_Pid}.pdf`
+    const resume = document.getElementById('resume');
+    resume.href = address
+  }).catch((error)=>{
+    console.log(error.response.data)
+   })
+  }
   
 
-  //  testing avatar
-  // const [file,setFile] = useState('')
-  var avatar;
+  var avatar, resume;
   const handleChange = (e)=>{
     const filee = e.target.files[0];
     const reader = new FileReader() ;
     reader.readAsDataURL(filee) ;
     reader.onloadend = ()=>{
       avatar = reader.result
+      resume = reader.result
     }
   }
   var avatar;
   const setavatar = async()=>{
-    const res = await axios.post('/api/seeker/avatar',{avatar})
+    try{
+    const res = await axios.post('/api/seeker/editAvatar',{avatar})
     const data = res.data ;
+    console.log(data)
+    }catch(error){
+      console.log(error.response.data)
+    }
     
   }
   const logout = async()=>{
       const res = await axios.post('/api/logout',{})
       console.log(res.data)
+  }
+  const setresume = async()=>{
+    const res = await axios.post('/api/seeker/editResume',{resume})
+    const data = res.data ;
+    console.log(data)
   }
   
   return (
@@ -63,13 +90,19 @@ const page = async () => {
         <br />
         <button onClick={tst}>test</button>
         <br />
+        <button onClick={getuser}>Get user</button>
+        <br />
         <input type="file" onChange={handleChange}/>
         <button onClick={setavatar}>update avatar</button>
+        <br />
+        <input type="file" onChange={handleChange}/>
+        <button onClick={setresume}>update resume</button>
         <br />
         <button onClick={signup}>sign up</button>
           <br />
         <button onClick={logout}>logout</button>
-        
+        <br />
+        <a href={`#`} id='resume' target='_blank'>download resume</a>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import connectToMongo from '@/app/lib/db';
-import User from '@/app/lib/models/user';
+import User from '@/app/lib/models/seeker';
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
@@ -45,6 +45,5 @@ export const POST = async (req) => {
     } catch (error) {
         success = false;
         return NextResponse.json({  success,error }, { status: 500 })
-        console.log(error)
     }
 }

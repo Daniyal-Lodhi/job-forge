@@ -7,7 +7,8 @@ export const POST = async (req,res)=>{
     return NextResponse.json('headers collected')
     }catch(error){
         console.log('undefined')
-        return NextResponse.json('headers collected')
+        const err = new Error('undefined') 
+        return NextResponse.json({error:err.message},{status:400})
 
     }
 }

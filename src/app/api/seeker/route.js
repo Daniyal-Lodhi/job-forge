@@ -3,14 +3,16 @@ import jwt from 'jsonwebtoken'
 import connectToMongo from '@/app/lib/db'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server';
-import User from '@/app/lib/models/user';
-import setAvatar from '@/app/backendComponents/avatarSignup';
+import Seeker from '@/app/lib/models/seeker';
+import uploadAvatar from '@/app/backendComponents/uploadAvatar';
+import fetchuser from '../middleware/fetchuser';
 
 connectToMongo();
+
 // Seeker SIGNUP
-export const POST = async (req, res) => { 
+export const POST = async (req, res) => {
     const body = await req.json();
-    const { name, email, password , avatar} = body;
+    const { name, email, password, avatar } = body;
     var success;
     // if user login from google then manipulating google sub ID
     var { _id } = body;
@@ -25,16 +27,16 @@ export const POST = async (req, res) => {
         }
     }
     try {
-        
-        let user = await User.findOne({ email: email })
+
+        let user = await Seeker.findOne({ email: email })
         if (user) {
             success = false;
-            return NextResponse.json({ message: "Email already registered", success },{status:400})
+            return NextResponse.json({ message: "Email already registered", success }, { status: 400 })
         }
         else {
-            if (avatar){
-                var avatar_Pid = await setAvatar(avatar,name) ;
-              }
+            if (avatar) {
+                var avatar_Pid = await uploadAvatar(avatar, name);
+            }
             var salt = await bcrypt.genSaltSync(10);
             const hashedPass = await bcrypt.hash(password, salt)
             const userObj = {
@@ -42,15 +44,15 @@ export const POST = async (req, res) => {
                 name: name,
                 email: email,
                 password: hashedPass,
-                avatar_Pid:avatar_Pid
+                avatar_Pid: avatar_Pid
             }
-            user = await User.create(userObj);
+            user = await Seeker.create(userObj);
             let data = {
                 user: {
                     id: _id
                 }
             }
-            
+
             var authToken = jwt.sign(data, process.env.authSecret)
             // setting the auto login for a month if user check remember me
             const { rememberMe } = body
@@ -61,7 +63,8 @@ export const POST = async (req, res) => {
                 maxAge: 10800
             })
             success = true;
-            return NextResponse.json({success,user,message:"user registered"}, { status:200,
+            return NextResponse.json({ success, user, message: "user registered" }, {
+                status: 200,
                 headers: {
                     "set-cookie": token
                 }
@@ -69,9 +72,41 @@ export const POST = async (req, res) => {
         }
     } catch (error) {
         success = false;
-        return NextResponse.json({ error,success},{status:500})
-        console.log(error)
+        return NextResponse.json({ error, success }, { status: 500 })
+    }
+}
+// GET SEEKER INFORMATION
+
+export const GET = async (req) => {
+    var success = true;
+    try {
+        await fetchuser(req)
+        var seeker = await Seeker.findById({ _id:req.user.id})
+        return NextResponse.json({ success, seeker }, { status: 200 })
+    } catch (error) {
+        success = false
+        return NextResponse.json({success, error:error}, {status:error.statusCode || 500})
     }
 }
 
+// EDIT USER PROFILE
 
+export const PUT = async(req)=>{
+    var success ;
+   try {
+    await fetchuser(req);
+    const body = await req.json() ;
+    const {ename , edescription} = body
+    let seeker = await Seeker.findById({_id:req.user.id})
+    seeker.name = ename ; 
+    seeker.description = edescription ;
+    await seeker.save() ;
+    success = true ;
+    return NextResponse.json({success,message:"user edited"},{status:200})
+   } catch (error) {
+    success = false ;
+    return NextResponse.json({success,error},{status:error.statusCode||500})
+   }
+
+}
+ 

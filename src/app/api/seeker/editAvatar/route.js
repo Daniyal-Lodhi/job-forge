@@ -1,33 +1,28 @@
 import { NextResponse } from "next/server"
 import fetchuser from "../../middleware/fetchuser"
-import User from "@/app/lib/models/user";
-import {v2 as cloudinary} from 'cloudinary';
-
-cloudinary.config({ 
-    cloud_name: process.env.cloud_name, 
-    api_key: process.env.api_key, 
-    api_secret: process.env.api_secret
-  });
+import '../../../backendComponents/cloudinaryConfig.js'
+import { v2 as cloudinary } from 'cloudinary'
+import Seeker from "@/app/lib/models/seeker";
 
 export const POST = async(req,res)=>{
-    fetchuser(req) ;
+    await fetchuser(req) ;
     const body = await req.json() ;
     const {avatar} = body ;
     var success ;
     try {
-        var user = await User.findById({_id:req.user.id})
-        if(!user){
+        var seeker = await Seeker.findById({_id:req.user.id})
+        if(!seeker){
             return NextResponse.json("User not found")
         }
-        if(user.avatar_Pid){
-            await cloudinary.uploader.destroy(user.avatar_Pid, function(error,result) { 
+        if(seeker.avatar_Pid){
+            await cloudinary.uploader.destroy(seeker.avatar_Pid, function(error,result) { 
                 if(error){
                     console.log(error)
                 }
                 console.log("old avatar deleted") })
         }
         var opt = {
-            public_id: `${user.name}-${Date.now()}`,
+            public_id: `${seeker.name}-${Date.now()}`,
             folder: 'jbfAvatar',
             resource_type:'auto',
             upload_preset:'jbf_preset'
@@ -36,17 +31,18 @@ export const POST = async(req,res)=>{
             if (error){
                 console.log(error)
             }
-            user.avatar_Pid = result.public_id ;
+            seeker.avatar_Pid = result.public_id ;
             console.log("upload done" ,result.public_id)
         })
-        await user.save()
+        await seeker.save()
 
         success = true
-        return NextResponse.json({success, user}, { status: 200 })
+        return NextResponse.json({success, message:"avatar updated"}, { status: 200 })
         
     } catch (error) {
         success = false
         console.log(error)
+        return NextResponse.json({success,error}, { status: 500 })
         // return NextResponse.json({success})
     }
 

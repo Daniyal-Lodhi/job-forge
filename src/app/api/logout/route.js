@@ -8,7 +8,9 @@ export const POST = async ()=>{
     cookiesStore.delete('authToken')
     return NextResponse.json({success},{status:200})
     } catch (error) {
-        console.log(error)
+        success = false
+        return NextResponse.json({success,error},{status:500})
+        
     }
     
 }
