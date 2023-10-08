@@ -3,7 +3,7 @@ import './cloudinaryConfig.js'
 
 const uploadAvatar = async(avatar,username)=>{
     var opt = {
-        public_id: `${username}-${Date.now()}`,
+        public_id: `${username.substring(0,16).replace(" ","-")}-${Date.now()}`,
         folder: 'jbfAvatar',
         resource_type:'auto',
         upload_preset:'jbf_preset'

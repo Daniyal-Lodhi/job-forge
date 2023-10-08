@@ -3,16 +3,16 @@ import jwt from 'jsonwebtoken'
 import connectToMongo from '@/app/lib/db'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server';
-import Seeker from '@/app/lib/models/seeker';
+import Employer from '@/app/lib/models/employer';
 import uploadAvatar from '@/app/backendComponents/uploadAvatar';
 import fetchuser from '../middleware/fetchuser';
 
 connectToMongo();
 
-// Seeker SIGNUP
+// EMPLOYER SIGNUP
 export const POST = async (req, res) => {
     const body = await req.json();
-    const { name, email, password, avatar } = body;
+    const { name, email, password, avatar,companyName } = body;
     var success;
     // if user login from google then manipulating google sub ID
     var { _id } = body;
@@ -20,7 +20,7 @@ export const POST = async (req, res) => {
         const idLength = _id.toString().length
         // fixing the length of google subId
         if (idLength !== 24) {
-            const randomNumber = Math.random() * 10000000000000
+            const randomNumber = Math.random() * 10000000000
             const randomRoundedNumber = Math.floor(randomNumber);   // Round down to an integer
             _id = _id.toString() + Date.now() + randomRoundedNumber
             _id = _id.substring(0, 24)
@@ -28,7 +28,7 @@ export const POST = async (req, res) => {
     }
     try {
 
-        let user = await Seeker.findOne({ email: email })
+        let user = await Employer.findOne({ email: email })
         if (user) {
             success = false;
             return NextResponse.json({ message: "Email already registered", success }, { status: 400 })
@@ -44,9 +44,10 @@ export const POST = async (req, res) => {
                 name: name,
                 email: email,
                 password: hashedPass,
-                avatar_Pid: avatar_Pid
+                avatar_Pid: avatar_Pid,
+                companyName:companyName,
             }
-            user = await Seeker.create(userObj);
+            user = await Employer.create(userObj);
             let data = {
                 user: {
                     id: _id
@@ -75,14 +76,14 @@ export const POST = async (req, res) => {
         return NextResponse.json({ error, success }, { status: 500 })
     }
 }
-// GET SEEKER INFORMATION
+// GET EMPLOYER INFORMATION
 
 export const GET = async (req) => {
     var success = true;
     try {
         await fetchuser(req)
-        var seeker = await Seeker.findById({ _id:req.user.id})
-        return NextResponse.json({ success, seeker }, { status: 200 })
+        var employer = await Employer.findById({ _id:req.user.id})
+        return NextResponse.json({ success, employer }, { status: 200 })
     } catch (error) {
         success = false
         return NextResponse.json({success, error:error}, {status:error.statusCode || 500})
@@ -96,11 +97,12 @@ export const PUT = async(req)=>{
    try {
     await fetchuser(req);
     const body = await req.json() ;
-    const {name , description} = body
-    let seeker = await Seeker.findById({_id:req.user.id})
-    seeker.name = name ; 
-    seeker.description = description ;
-    await seeker.save() ;
+    const {name , description, companyName} = body
+    let employer = await Employer.findById({_id:req.user.id})
+    employer.name = name ; 
+    employer.description = description ;
+    employer.companyName = companyName ;
+    await employer.save() ;
     success = true ;
     return NextResponse.json({success,message:"user edited"},{status:200})
    } catch (error) {
