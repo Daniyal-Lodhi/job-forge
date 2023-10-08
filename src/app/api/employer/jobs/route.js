@@ -54,12 +54,37 @@ export const GET = async(req)=>{
     }
 }
 
+// JOB STATUS CHANGING 
+// just need to give the id of job to update its status
+export const PUT = async(req)=>{
+    var success ;
+    try {
+        fetchuser(req) ;
+        const body = await req.json()
+        const {jobId} = body ;
+        let job = await Job.findById(jobId) ;
+        if(req.user.id !== job.employerId.toString()){
+            success = false ;
+            return NextResponse.json({success,message:"Unauthorized Request"},{status:401})
+        }
+        job.status = job.status === 'active' ? 'inactive':'active' ;
+        await job.save() ;
+        success = true ;
+        return NextResponse.json({success , job } ,{status:200})
+    } catch (error) {
+        success = false ;
+        return NextResponse.json({success,error:error.message},{status:error.statusCode||500})
+    }
+}
+
+
 // DELETEING JOBS POSTED BY THE PARTICULAR EMPLOYER WHO POSTS IT
 // just need to give the id of job to be deleted
 export const DELETE = async(req)=>{
     var success;
     try {
         const body = await req.json();
+        let postedJob = await Jobs
         const {id} = body ;
         let job = await Job.findById(id);
         if(!job){

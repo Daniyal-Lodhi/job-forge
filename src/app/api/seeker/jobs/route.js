@@ -17,9 +17,9 @@ export const POST = async(req)=>{
         let seeker;
             seeker = await Seeker.findById(req.user.id).select("_id")
         // getting the id of job and its poster (employer)
-        let job = await Job.findById(jobId).select('_id employerId status');
+        let job = await Job.findById(jobId).select('_id employerId status response');
         
-        // creating the entry
+        // // creating the entry
         let appliedJobObj = {
             jobId: job._id,
             employerId : job.employerId,
@@ -37,7 +37,7 @@ export const POST = async(req)=>{
         let appliedJob = await AppliedJob.create(appliedJobObj) 
 
         success = true ;
-        return NextResponse.json({success,appliedJob},{status:200})
+        return NextResponse.json({success,message:job},{status:200})
 
     } catch (error) {
         success = false ;
@@ -46,12 +46,16 @@ export const POST = async(req)=>{
     }
 }
 
-// GETING APPLIED JOBS
+// GETTING APPLIED JOBS
 
-export const GET = async()=>{
+export const GET = async(req)=>{
     var success ;
     try {
         await fetchuser(req) ;
+        let appliedJobs = await AppliedJob.find({seekerId:req.user.id})
+        success = true ;
+        return NextResponse.json({success,appliedJobs},{status:200})
+
     } catch (error) {
         success = false ;
         console.log(error)
