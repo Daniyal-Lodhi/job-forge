@@ -3,7 +3,9 @@ import fetchuser from '../../middleware/fetchuser';
 import { NextResponse } from 'next/server';
 import '../../../backendComponents/cloudinaryConfig.js'
 import Seeker from '@/app/lib/models/seeker';
+import connectToMongo from '@/app/lib/db';
 
+connectToMongo();
 export const POST = async(req)=>{
     var success;
     try {

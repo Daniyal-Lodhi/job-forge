@@ -3,6 +3,9 @@ import fetchuser from "../../middleware/fetchuser"
 import '../../../backendComponents/cloudinaryConfig.js'
 import { v2 as cloudinary } from 'cloudinary'
 import Employer from "@/app/lib/models/employer";
+import connectToMongo from "@/app/lib/db";
+
+connectToMongo();
 
 export const POST = async(req,res)=>{
     await fetchuser(req) ;

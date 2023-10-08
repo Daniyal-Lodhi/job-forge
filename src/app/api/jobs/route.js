@@ -1,6 +1,8 @@
+import connectToMongo from "@/app/lib/db";
 import Jobs from "@/app/lib/models/jobs"
 import { NextResponse } from "next/server";
 
+connectToMongo();
 // GET ALL JOBS
 export const GET = async(req)=>{
     var success;

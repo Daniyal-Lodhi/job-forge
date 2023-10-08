@@ -3,8 +3,10 @@ import fetchuser from "../../middleware/fetchuser"
 import '../../../backendComponents/cloudinaryConfig.js'
 import { v2 as cloudinary } from 'cloudinary'
 import Seeker from "@/app/lib/models/seeker";
+import connectToMongo from "@/app/lib/db";
 
-export const POST = async(req,res)=>{
+connectToMongo();
+export const POST = async(req)=>{
     await fetchuser(req) ;
     const body = await req.json() ;
     const {avatar} = body ;
@@ -42,8 +44,7 @@ export const POST = async(req,res)=>{
     } catch (error) {
         success = false
         console.log(error)
-        return NextResponse.json({success,error}, { status: 500 })
-        // return NextResponse.json({success})
+        return NextResponse.json({success,error:error.message}, { status: 500 })
     }
 
 }

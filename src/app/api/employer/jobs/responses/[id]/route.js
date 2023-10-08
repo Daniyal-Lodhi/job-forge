@@ -6,16 +6,15 @@ import Employer from "@/app/lib/models/employer";
 import { NextResponse } from "next/server";
 import nodemailer from 'nodemailer'
 
+
 connectToMongo();
 // GET RESPONSES FROM APPLIED JOBS
 // we just need to give the id of the job to see proposals
-export const POST = async (req) => {
+export const POST = async (req,content) => {
     var success;
     try {
         await fetchuser(req);
-        const body = await req.json()
-        const { jobId } = body;
-        const responses = await AppliedJobs.find({ jobId });
+        const responses = await AppliedJobs.find({ jobId:content.params.id });
         if(req.user.id !== responses[0].employerId.toString()){
             success = false ;
             return NextResponse.json({success,message:"Unauthorized Request"},{status:401})
@@ -43,16 +42,16 @@ export const POST = async (req) => {
 
     }
 }
-// sending th response to seeker we provide the id of applied job in body
-export const PUT = async (req) => {
+// sending the response to seeker we provide the id of applied job in body
+export const PUT = async (req,content) => {
     var success;
     try {
         await fetchuser(req);
         const body = await req.json()
-        const { response, email, appliedJobId, subject, description ,senderName  } = body;
+        const { response, email, subject, description ,senderName  } = body;
       
 
-        let appliedJob = await AppliedJobs.findById(appliedJobId)
+        let appliedJob = await AppliedJobs.findById(content.params.id)
           // Employer
         let employer = await Employer.findById(req.user.id)
         // Seeker
