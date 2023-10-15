@@ -36,6 +36,9 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         require: true,
     },
+    interviewDate:{
+        type:Date,
+    }
 }, {
     collection: "AppliedJobs"
 })

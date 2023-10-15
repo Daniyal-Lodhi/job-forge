@@ -1,5 +1,9 @@
+import Navbar from '@/components/Navbar'
 import AuthProvider from '../components/AuthProvider'
 import './globals.css'
+import Script from 'next/script'
+
+
 
 
 
@@ -11,11 +15,33 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body >
+      <head>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+
+      </head>
+
+      <body suppressHydrationWarning >
       <AuthProvider>   
+        <div className='absolute w-full top-0'>
+        <Navbar/>
+        </div>
         {children}
         </AuthProvider>
-      </body>
+
+
+
+
+
+
+
+
+
+
+
+
+{/* Flowbite scripts */}
+
+        </body>
     </html>
   )
 }

@@ -9,7 +9,7 @@ export const GET = async(req,content)=>{
         const regexSearchTerm = new RegExp(searchTerm,"i") 
         let jobs = await Jobs.find({jobTitle:regexSearchTerm})
 
-
+        
         success = true ;
         return NextResponse.json({success ,jobs} , {status:200})
     } catch (error) {

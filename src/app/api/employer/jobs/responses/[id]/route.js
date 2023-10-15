@@ -48,7 +48,7 @@ export const PUT = async (req,content) => {
     try {
         await fetchuser(req);
         const body = await req.json()
-        const { response, email, subject, description ,senderName  } = body;
+        const { response, email, subject, description ,senderName ,interviewDate } = body;
       
 
         let appliedJob = await AppliedJobs.findById(content.params.id)
@@ -100,6 +100,7 @@ export const PUT = async (req,content) => {
                 sendmail(transporter,mailOptions) ;
             }
             appliedJob.status = "shortlisted"
+            appliedJob.interviewDate = interviewDate ;
             await appliedJob.save();
             success = true;
             return NextResponse.json({ success, appliedJob }, { status: 200 })

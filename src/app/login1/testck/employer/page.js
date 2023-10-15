@@ -94,7 +94,7 @@ const page = async () => {
   
   
   return (
-    <div>
+    <div className='my-10'>
         <button onClick={login}>login</button>
         <br />
         <button onClick={tst}>test</button>

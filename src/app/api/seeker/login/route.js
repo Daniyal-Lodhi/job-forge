@@ -38,7 +38,7 @@ export const POST = async (req) => {
             maxAge: 10800
         })
         success = true;
-        return NextResponse.json({success},{status:200,headers:{
+        return NextResponse.json({success,role:'seeker'},{status:200,headers:{
             "set-cookie": token
         }})
 

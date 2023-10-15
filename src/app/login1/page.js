@@ -4,7 +4,6 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import connectToMongo from '../lib/db';
 connectToMongo() ;
 
@@ -34,7 +33,7 @@ const page = () => {
     password: '123123123',
     avatar: file
   }
-
+  
   // 
   const Upload = async () => {
     const response = await axios.post('http://localhost:3000/api/userlogin', body)
