@@ -35,7 +35,7 @@ export const POST = async (req) => {
         const token = cookie.set('authToken',authToken,{
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: 10800
+            maxAge: rememberMe?10800:0
         })
         success = true;
         return NextResponse.json({success,role:'seeker'},{status:200,headers:{

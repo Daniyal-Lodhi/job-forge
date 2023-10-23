@@ -8,7 +8,7 @@ export const POST = async (req, res) => {
         
     } catch (error) {
         // const err = new Error('undefined')
-        return NextResponse.json({success : false, token:"undefined"}, { status: 401 })
+        return NextResponse.json({success : false, token:"undefined"})
 
     }
 }

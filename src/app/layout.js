@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>   
         <div className='absolute w-full top-0'>
         <Navbar/>
-        </div>
+        </div> 
         {children}
         </AuthProvider>
 

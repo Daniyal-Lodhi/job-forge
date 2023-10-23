@@ -96,10 +96,14 @@ export const PUT = async(req)=>{
    try {
     await fetchuser(req);
     const body = await req.json() ;
-    const {name , description} = body
+    const {name , description,address,country,skills,profession} = body
     let seeker = await Seeker.findById({_id:req.user.id})
-    seeker.name = name ; 
+    name ?seeker.name = name: "" ;
     seeker.description = description ;
+    seeker.country = country ;
+    seeker.address = address
+    seeker.skills = skills
+    seeker.profession = profession
     await seeker.save() ;
     success = true ;
     return NextResponse.json({success,message:"user edited"},{status:200})

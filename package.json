@@ -14,6 +14,7 @@
     "@cloudinary/url-gen": "^1.11.2",
     "@heroicons/react": "^2.0.18",
     "@react-oauth/google": "^0.11.1",
+    "@uiball/loaders": "^1.3.0",
     "autoprefixer": "10.4.16",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",

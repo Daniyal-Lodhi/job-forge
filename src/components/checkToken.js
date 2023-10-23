@@ -10,9 +10,11 @@ useEffect(()=>{
         if(res.data.success){
             // console.log(res.data.success)
             setToken(true)
+            return token
         }
     }).catch((err)=>{
         setToken(false)
+        return token
         // console.log(err.response.data)
     })
 },[])

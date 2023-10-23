@@ -33,6 +33,18 @@ const UserSchema = new mongoose.Schema({
 
     resume_Pid: {
         type: String,
+    },
+    country:{
+        type: String
+    },
+    address:{
+        type: String
+    },
+    skills:{
+        type:Array
+    },
+    profession:{
+        type:String,
     }
 }, {
     collection: "Seeker"
