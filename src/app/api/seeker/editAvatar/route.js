@@ -41,7 +41,7 @@ export const POST = async(req)=>{
             seeker.avatar_Pid = result.public_id ;
             console.log("upload done" ,result.public_id)
         })
-        await seeker.save()
+        await seeker.save() 
 
         success = true
         return NextResponse.json({success, message:"avatar updated"}, { status: 200 })

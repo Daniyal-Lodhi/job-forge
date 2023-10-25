@@ -10,7 +10,6 @@ const ProfileImage = ({profileImage}) => {
       cloudName: 'dpbbbeutj'
     }
   });
-  console.log(profileImage)
 
   // cld.image returns a CloudinaryImage with the configuration set.
   const myImage = cld.image(profileImage);

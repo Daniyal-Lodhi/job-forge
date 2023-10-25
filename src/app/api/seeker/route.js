@@ -49,9 +49,9 @@ export const POST = async (req, res) => {
             user = await Seeker.create(userObj);
             let data = {
                 user: {
-                    id: _id
+                    id: user._id
                 }
-            }
+            } 
 
             var authToken = jwt.sign(data, process.env.authSecret)
             // setting the auto login for a month if user check remember me
@@ -60,15 +60,12 @@ export const POST = async (req, res) => {
             const token = cookie.set('authToken', authToken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 10800
+            maxAge: rememberMe?10800:0
             })
             success = true;
-            return NextResponse.json({ success, role:'seeker'}, {
-                status: 200,
-                headers: {
-                    "set-cookie": token
-                }
-            })
+           return NextResponse.json({success,role:'seeker'},{status:200,headers:{
+            "set-cookie": token
+        }})
         }
     } catch (error) {
         success = false;
@@ -81,7 +78,7 @@ export const GET = async (req) => {
     var success = true;
     try {
         await fetchuser(req)
-        var seeker = await Seeker.findById({ _id:req.user.id})
+        var seeker = await Seeker.findById({ _id:req.user.id}).select('-password')
         return NextResponse.json({ success, seeker }, { status: 200 })
     } catch (error) {
         success = false
@@ -96,8 +93,31 @@ export const PUT = async(req)=>{
    try {
     await fetchuser(req);
     const body = await req.json() ;
-    const {name , description,address,country,skills,profession} = body
-    let seeker = await Seeker.findById({_id:req.user.id})
+    const {name , description,address,country,skills,profession,avatar} = body
+    let seeker = await Seeker.findById({_id:req.user.id}) ;
+    // coding avatar edit
+    if(seeker.avatar_Pid){
+        await cloudinary.uploader.destroy(seeker.avatar_Pid, function(error,result) { 
+            if(error){
+                console.log(error)
+            }
+            console.log("old avatar deleted") })
+    }
+    // Image upload options 
+    var opt = {
+        public_id: `${seeker.name.replace(" ","-")}-${Date.now()}`,
+        folder: 'jbfAvatar',
+        resource_type:'auto',
+        upload_preset:'jbf_preset'
+    }
+    await cloudinary.uploader.upload(avatar,opt,(error,result)=>{
+        if (error){
+            console.log(error)
+        }
+        seeker.avatar_Pid = result.public_id ;
+        console.log("upload done" ,result.public_id)
+    })
+    // editing further profile attributes     
     name ?seeker.name = name: "" ;
     seeker.description = description ;
     seeker.country = country ;

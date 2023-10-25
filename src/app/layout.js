@@ -1,8 +1,8 @@
 import Navbar from '@/components/Navbar'
 import AuthProvider from '../components/AuthProvider'
 import './globals.css'
-import Script from 'next/script'
-
+import TokenState from './context/token/TokenState'
+import UserState from './context/seeker/UserState'
 
 
 
@@ -21,12 +21,16 @@ export default function RootLayout({ children }) {
       </head>
 
       <body suppressHydrationWarning >
+        <TokenState>
+        <UserState>
       <AuthProvider>   
         <div className='absolute w-full top-0'>
         <Navbar/>
         </div> 
         {children}
         </AuthProvider>
+        </UserState>
+        </TokenState>
 
 
 

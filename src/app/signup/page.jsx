@@ -1,18 +1,21 @@
 'use client'
 import axios from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import { UserIcon } from '@heroicons/react/24/outline'
 import SignUpLoader from '@/components/SignUpLoader';
+import TokenContext from '../context/token/tokenContext';
 
 
 
 const page = () => {
   const router = useRouter();
-// loading vars
-const [loading,setLoading] = useState(false) ;
+  // getting token and setToken from the token context
+  const {token , setToken} = useContext(TokenContext)
+  // loading vars
+  const [loading, setLoading] = useState(false);
 
   // <display password> 
   const [showPassword, setShowPassword] = useState('password')
@@ -37,14 +40,14 @@ const [loading,setLoading] = useState(false) ;
     }
     console.log(role)
   }
-    // </ setting Roles> 
+  // </ setting Roles> 
 
 
 
   const [formData, setFormdata] = useState({
     name: '',
     email: '',
-    companyName:'',
+    companyName: '',
     password: '',
     rememberMe: false,
     avatar: ''
@@ -93,7 +96,6 @@ const [loading,setLoading] = useState(false) ;
 
   const [valErrs, setValErrs] = useState({})
   const signup = (e) => {
-    // e.preventDefault()
     setLoading(true)
     // FormValidation
     if (!formData.name) {
@@ -115,13 +117,13 @@ const [loading,setLoading] = useState(false) ;
       setValErrs(formErrors)
 
     }
-    if(role==='employer'){
-      if(!formData.companyName){
-        formErrors.companyName = "Company Name is required" 
+    if (role === 'employer') {
+      if (!formData.companyName) {
+        formErrors.companyName = "Company Name is required"
         setValErrs(formErrors)
       }
     }
-    
+
     if (!formData.password) {
       formErrors.password = "Password is required"
       setValErrs(formErrors)
@@ -147,14 +149,16 @@ const [loading,setLoading] = useState(false) ;
         then(res => {
           setLoading(false)
           console.log(res.data)
-        }).then(() => {
-          location.reload()
-          router.push('/')
-          console.log('DONE')
+          setToken(true)
+          localStorage.setItem('token', true)
+        })
+        .then(()=>{
+          router.push('/profile')
         }).
+
         catch(error => {
           setLoading(false)
-          console.log(error)
+          console.log(error.response.data)
           setCredentialsErr(error.response.data.message)
         })
 
@@ -216,9 +220,9 @@ const [loading,setLoading] = useState(false) ;
               <input aria-labelledby="email" type="email" onChange={handleChange} className="bg-gray-200 border rounded  text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2" name='email' />
             </div>
             {/* Company Name */}
-            <div className={`mt-4 ${role==='employer'?'block':'hidden'}`}>
-              <label id="compnayName"  className="text-sm font-medium leading-none text-gray-800">
-              Company name
+            <div className={`mt-4 ${role === 'employer' ? 'block' : 'hidden'}`}>
+              <label id="compnayName" className="text-sm font-medium leading-none text-gray-800">
+                Company name
               </label>
               <span className='text-red-600 text-sm ml-2'>{valErrs.companyName ? "( " + valErrs.companyName + " )" : ""}</span>
               <input aria-labelledby="companyName" type="text" onChange={handleChange} className="bg-gray-200 border rounded  text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2" name='companyName' />
@@ -257,8 +261,8 @@ const [loading,setLoading] = useState(false) ;
             </div>
             {/* Sign up Button */}
             <div className="mt-8">
-              
-              <button onClick={signup} id='signupBtn' className=" disabled:bg-slate-500 focus:ring-2 focus:ring-offset-2  focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600  h-11 w-full box-content "> {loading ?<SignUpLoader loading={true}/> :'Create account'} </button>
+
+              <button onClick={signup} id='signupBtn' className=" disabled:bg-slate-500 focus:ring-2 focus:ring-offset-2  focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600  h-11 w-full box-content "> {loading ? <SignUpLoader loading={true} /> : 'Create account'} </button>
               <span className='mt-2 text-center mx-auto flex justify-center items-center text-red-600 font-semibold '>{credentialsErr ? credentialsErr + "!" : ""}</span>
 
               {/* Remember Me button */}
@@ -268,7 +272,7 @@ const [loading,setLoading] = useState(false) ;
                 </div>
                 <label htmlFor="checkbox" className="cursor-pointer ml-2  text-sm font-medium text-gray-900 dark:text-gray-300"  >Remember me</label>
               </div>
-                            
+
 
 
             </div>

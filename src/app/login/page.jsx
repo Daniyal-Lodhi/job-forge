@@ -1,15 +1,19 @@
 'use client'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import SignUpLoader from '@/components/SignUpLoader';
+import TokenContext from '../context/token/tokenContext';
 
 
 
 const page = () => {
   const router = useRouter();
+
+  const {token,setToken} = useContext(TokenContext)
+  // console.log(token)
   // loading vars
   const [loading, setLoading] = useState(false);
   // display password 
@@ -97,9 +101,9 @@ const page = () => {
         then(res => {
           setLoading(false)
           console.log(res.data)
-        }).then(() => {
+          setToken(true)
+          localStorage.setItem('token',true)
           router.push('/profile')
-          // location.reload()
         }).
         catch(error => {
           setLoading(false)

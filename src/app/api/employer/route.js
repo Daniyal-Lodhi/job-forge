@@ -50,7 +50,7 @@ export const POST = async (req, res) => {
             user = await Employer.create(userObj);
             let data = {
                 user: {
-                    id: _id
+                    id: user._id
                 }
             }
 
@@ -82,7 +82,7 @@ export const GET = async (req) => {
     var success = true;
     try {
         await fetchuser(req)
-        var employer = await Employer.findById({ _id:req.user.id})
+        var employer = await Employer.findById({ _id:req.user.id}).select('-password')
         return NextResponse.json({ success, employer }, { status: 200 })
     } catch (error) {
         success = false

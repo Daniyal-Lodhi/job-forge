@@ -1,22 +1,21 @@
 'use client'
 
 import axios from 'axios'
-import React, { useState } from 'react'
-import SeekerContext from './seekerContext'
-import checkToken from '@/components/checkToken'
-
-const SeekerState = (props) => {
+import React, { useContext, useState } from 'react'
+import UserContext from './UserContext'
+import TokenContext from '../token/tokenContext'
+const UserState = (props) => {
+    const {token} = useContext(TokenContext)
     const [seeker,setSeeker] = useState({})
     const getSeeker = ()=>{
-        if(checkToken){
+        if(token){
         axios.get('/api/seeker').
         then(res=>{
             setSeeker(res.data.seeker)
-            console.log(true)
         }).
         catch(error=>{
+            console.log(error)
             return false
-            // console.log(error)
         })
     }       
     else{
@@ -24,10 +23,10 @@ const SeekerState = (props) => {
         }
     }
   return (
-    <SeekerContext.Provider value={{getSeeker,seeker}} >
+    <UserContext.Provider value={{getSeeker,seeker}} >
         {props.children}
-    </SeekerContext.Provider>
+    </UserContext.Provider>
   )
 }
 
-export default SeekerState
+export default UserState

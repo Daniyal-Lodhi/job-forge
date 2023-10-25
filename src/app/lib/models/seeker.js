@@ -8,7 +8,9 @@ const UserSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        default:"Your nameprofess here"
+
     },
     email: {
         type: String,
@@ -29,22 +31,29 @@ const UserSchema = new mongoose.Schema({
     },
     description: {
         type: String,
+        default:"Your description here"
+
     },
 
     resume_Pid: {
         type: String,
     },
     country:{
-        type: String
+        type: String,
+        default:"Your country here"
+
     },
     address:{
-        type: String
+        type: String,
+        default:"Your address here"
+
     },
     skills:{
         type:Array
     },
     profession:{
         type:String,
+        default:"Your profession here"
     }
 }, {
     collection: "Seeker"
