@@ -9,7 +9,8 @@ const EmployerSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        default:"your name here"
     },
     email: {
         type: String,
@@ -29,10 +30,17 @@ const EmployerSchema = new mongoose.Schema({
     },
     description: {
         type: String,
+        default:"your intro here"
+
     },
 
     companyName: {
         type: String,
+        default:"your company name here"
+    },
+    companyAddress : {
+        type: String,
+        default:"Company address here"
     }
 },
 {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Ring } from '@uiball/loaders'
 
 
-const SignUpLoader = ({loading}) => {
+const SignUpLoader = ({loading,color}) => {
     
     return (
         <div className='flex justify-center'>
@@ -10,7 +10,7 @@ const SignUpLoader = ({loading}) => {
            { loading && <Ring
                 size={30}
                 speed={1.5}
-                color="white"
+                color={`${color?color:'white'}`}
             />}
         </div>
     )

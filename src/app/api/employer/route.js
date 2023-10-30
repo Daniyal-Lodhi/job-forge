@@ -8,7 +8,16 @@ import uploadAvatar from '@/app/backendComponents/uploadAvatar';
 import fetchuser from '../middleware/fetchuser';
 
 connectToMongo();
+import {v2 as cloudinary} from 'cloudinary';
 
+
+cloudinary.config({ 
+    cloud_name: process.env.NEXT_PUBLIC_cloud_name, 
+    api_key: process.env.api_key, 
+    api_secret: process.env.api_secret
+  });
+
+  
 // EMPLOYER SIGNUP
 export const POST = async (req, res) => {
     const body = await req.json();
@@ -97,17 +106,43 @@ export const PUT = async(req)=>{
    try {
     await fetchuser(req);
     const body = await req.json() ;
-    const {name , description, companyName} = body
+    const {name , description, companyName,avatar ,companyAddress} = body
     let employer = await Employer.findById({_id:req.user.id})
+    if(avatar){
+        // coding avatar edit
+        if(employer.avatar_Pid){
+            await cloudinary.uploader.destroy(employer.avatar_Pid, function(error,result) { 
+                if(error){
+                    console.log(error)
+                }
+                console.log("old avatar deleted") })
+        }
+        // Image upload options 
+        var opt = {
+            public_id: `${employer.name.replace(" ","-")}-${Date.now()}`,
+            folder: 'jbfAvatar',
+            resource_type:'auto',
+            upload_preset:'jbf_preset'
+        }
+        await cloudinary.uploader.upload(avatar,opt,(error,result)=>{
+            if (error){
+                console.log(error)
+            }
+            employer.avatar_Pid = result.public_id ;
+            console.log("upload done" ,result.public_id)
+        })
+    }
+    // updating further profile attributes 
     employer.name = name ; 
     employer.description = description ;
     employer.companyName = companyName ;
+    employer.companyAddress = companyAddress ;
     await employer.save() ;
     success = true ;
     return NextResponse.json({success,message:"user edited"},{status:200})
    } catch (error) {
     success = false ;
-    return NextResponse.json({success,error},{status:error.statusCode||500})
+    return NextResponse.json({success,error:error.message},{status:error.statusCode||500})
    }
 
 }

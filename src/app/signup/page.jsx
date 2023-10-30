@@ -13,7 +13,8 @@ import TokenContext from '../context/token/tokenContext';
 const page = () => {
   const router = useRouter();
   // getting token and setToken from the token context
-  const {token , setToken} = useContext(TokenContext)
+  const {setToken , SetRole} = useContext(TokenContext)
+
   // loading vars
   const [loading, setLoading] = useState(false);
 
@@ -150,6 +151,10 @@ const page = () => {
           setLoading(false)
           console.log(res.data)
           setToken(true)
+           // role from token context
+           SetRole(role)
+           //saving the role in local storage so it wont get refresh
+           localStorage.setItem('role',role)
           localStorage.setItem('token', true)
         })
         .then(()=>{

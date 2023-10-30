@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import TokenContext from '@/app/context/token/tokenContext'
 const Navbar = () => {
-  const { token, setToken } = useContext(TokenContext)
+  const { token, setToken , SetRole } = useContext(TokenContext)
   // console.log('token in navbar',token)
   
   // 
@@ -27,10 +27,14 @@ const Navbar = () => {
       router.push('/login')
       setToken(false)
       localStorage.setItem('token', false)
+      SetRole('');
+      localStorage.setItem('role','')
+
+
     })
   }
   return (
-    <div>
+    <div className='z-10'>
 
       <nav className="bg-transparent border-gray-200 ">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 pr-2 md:p-3 md:pr-1">
@@ -70,7 +74,7 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          <div className={`items-center justify-between ${showMenu} w-full md:flex md:w-auto md:order-1`} id="navbar-user">
+          <div className={`items-center z-10 justify-between ${showMenu} w-full md:flex md:w-auto md:order-1`} id="navbar-user">
             <ul className={`fontM  ${token === true ? 'flex' : 'hidden'}  flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-16 md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 text-center`}>
               <li>
                 <Link href="/" className={`block py-2 pl-3 pr-4 text-gray-900 ${path === '/' ? "md:text-blue-500 md:bg-transparent text-white bg-blue-500 " : ""} text rounded   md:p-0 `} aria-current="page">Home</Link>

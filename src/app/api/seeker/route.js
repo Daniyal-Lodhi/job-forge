@@ -6,7 +6,13 @@ import { NextResponse } from 'next/server';
 import Seeker from '@/app/lib/models/seeker';
 import uploadAvatar from '@/app/backendComponents/uploadAvatar';
 import fetchuser from '../middleware/fetchuser';
+import { v2 as cloudinary } from 'cloudinary'
 
+cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret
+});
 connectToMongo();
 
 // Seeker SIGNUP
@@ -95,6 +101,7 @@ export const PUT = async(req)=>{
     const body = await req.json() ;
     const {name , description,address,country,skills,profession,avatar} = body
     let seeker = await Seeker.findById({_id:req.user.id}) ;
+    if(avatar){
     // coding avatar edit
     if(seeker.avatar_Pid){
         await cloudinary.uploader.destroy(seeker.avatar_Pid, function(error,result) { 
@@ -117,6 +124,7 @@ export const PUT = async(req)=>{
         seeker.avatar_Pid = result.public_id ;
         console.log("upload done" ,result.public_id)
     })
+}
     // editing further profile attributes     
     name ?seeker.name = name: "" ;
     seeker.description = description ;
@@ -129,7 +137,7 @@ export const PUT = async(req)=>{
     return NextResponse.json({success,message:"user edited"},{status:200})
    } catch (error) {
     success = false ;
-    return NextResponse.json({success,error},{status:error.statusCode||500})
+    return NextResponse.json({success,error:error.message},{status:error.statusCode||500})
    }
 
 }
