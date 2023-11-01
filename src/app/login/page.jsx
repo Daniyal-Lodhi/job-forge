@@ -111,7 +111,7 @@ const page = () => {
         }).
         catch(error => {
           setLoading(false)
-          // console.log(error.response.data)
+          console.log(error)
           setCredentialsErr(error.response.data)
         })
 

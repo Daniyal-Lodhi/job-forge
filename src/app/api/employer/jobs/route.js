@@ -11,7 +11,7 @@ export const POST = async(req)=>{
     try{
         await fetchuser(req)
     const body = await req.json()
-        const {jobTitle,jobDescription,companyName,education,skillsrequire,location,contactInfo,contractType,workType,response} = body
+        const {jobTitle,jobDescription,companyName,education,skillsrequire,location,contactInfo,contractType,workType,response,requireTodo} = body
         var user = await Employer.exists({_id:req.user.id})
         if(!user){
             success = false
@@ -29,7 +29,8 @@ export const POST = async(req)=>{
             contactInfo,
             contractType,
             workType,
-            response
+            response,
+            requireTodo
         }
         var job = await Job.create(jobObj)
         return NextResponse.json({success,job},{status:200})

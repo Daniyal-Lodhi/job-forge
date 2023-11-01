@@ -47,6 +47,10 @@ const UserSchema = new mongoose.Schema({
     status:{
         type: String,
         default : 'active', 
+    },
+    requireTodo:{
+        type:String,
+        default:"",
     }
 
 }, {
