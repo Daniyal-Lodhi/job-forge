@@ -16,7 +16,7 @@ export const GET = async(req)=>{
         let appliedJobs = await AppliedJob.find({seekerId:req.user.id})
         success = true ;
         return NextResponse.json({success,appliedJobs},{status:200})
-
+        
     } catch (error) {
         success = false ;
         console.log(error)
